@@ -140,4 +140,76 @@ function Transliteration(string $str, array $alfabetT): string
 }
 
 echo $str . PHP_EOL;
-echo Transliteration($str, $alfabet);
+echo Transliteration($str, $alfabet) . PHP_EOL;
+
+// 5. *С помощью рекурсии организовать функцию возведения числа в степень. 
+// Формат: function power($val, $pow), где $val – заданное число, $pow – степень.
+
+$val = 2;
+$pow = 10;
+
+function power(float $val, float $pow, float $res = 1)
+{
+    if ($pow <= 0) {
+        return $res;
+    }
+    return power($val, $pow - 1, $res * $val);
+}
+
+echo power($val, $pow) . PHP_EOL;
+
+
+// 6. *Написать функцию, которая вычисляет текущее время и возвращает его в формате с правильными склонениями, например:
+// 22 часа 15 минут
+// 21 час 43 минуты.
+
+//$n % 10;
+/*
+0 часов	минут	10 часов минут 20 часов минут	30 минут  40 минут
+1 час	минута	11 часов минут 21 час	минута	31 минута 41 минута
+2 часа	минуты	12 часов минут 22 часа	минуты	32 минуты 42 минуты
+3 часа	минуты	13 часов минут 23 часа	минуты	33 минуты 43 минуты
+4 часа	минуты	14 часов минут 24 часа	минуты	34 минуты 44 минуты
+5 часов	минут	15 часов минут 25		минут	35 минут  45 минут
+6 часов	минут	16 часов минут 26		минут	36 минут  46 минут
+7 часов минут	17 часов минут 27		минут	37 минут  47 минут
+8 часов	минут	18 часов минут 28		минут	38 минут  48 минут
+9 часов минут	19 часов минут 29		минут	39 минут  49 минут
+*/
+date_default_timezone_set('Europe/Moscow');
+
+$time = date("H:i");
+$timeArray = explode(':', $time);
+
+// for ($j = 0; $j < 60; $j++) {
+//     $timeArray = ["0", (string)$j];
+$str = '';
+
+for ($i = 0; $i < count($timeArray); $i++) {
+    $str = $str . ' ' . $timeArray[$i] . ' ' . word((int)$timeArray[$i], $i);
+}
+
+echo $str . PHP_EOL;
+// }
+
+
+function word(int $digit, int $index): string
+{
+    if ($index === 0) {
+        if ($digit % 20 >= 2 && $digit % 20 <= 4) {
+            return "часа";
+        } else if ($digit % 20 === 1) {
+            return "час";
+        } else {
+            return "часов";
+        }
+    } else {
+        if ($digit % 10 >= 2 && $digit % 10 <= 4 && ($digit < 12 || $digit > 14)) {
+            return "минуты";
+        } else if ($digit % 10 === 1 && $digit !== 11) {
+            return "минута";
+        } else {
+            return "минут";
+        }
+    }
+}
