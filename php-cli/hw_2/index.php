@@ -111,14 +111,12 @@ $alfabet = [
     'э' => 'e',   'ю' => 'yu',  'я' => 'ya'
 ];
 
-$str = "Транслитерация... Ё-маё!!!";
+$str = "Транслитерация... Щ-маё!!!";
 
 function checkLetter(string $char, array $alfabetTt): string
 {
-    foreach ($alfabetTt as $key => $value) {
-        if ($char === $key) {
-            $char = $value;
-        }
+    if (isset($char, $alfabetTt[$char])) {
+        $char = $alfabetTt[$char];
     }
     return $char;
 }
@@ -131,7 +129,7 @@ function Transliteration(string $str, array $alfabetT): string
 
         if (mb_strtolower($newArray[$i], 'UTF-8') !== $newArray[$i]) {
             $char = mb_strtolower($newArray[$i], 'UTF-8');
-            $newArray[$i] = mb_strtoupper(checkLetter($char, $alfabetT));
+            $newArray[$i] = ucfirst(checkLetter($char, $alfabetT));
         } else {
             $newArray[$i] = checkLetter($newArray[$i], $alfabetT);
         }
