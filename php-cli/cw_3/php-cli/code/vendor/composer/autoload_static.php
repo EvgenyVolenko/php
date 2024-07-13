@@ -10,6 +10,7 @@ class ComposerStaticInitcda29c6859a2ec15daef0739cabebd88
         '73a76277cdd754516bf94aa9c0aa6bb3' => __DIR__ . '/../..' . '/src/main.function.php',
         '2c30778c83e7cf1ab5d05f6fb053a212' => __DIR__ . '/../..' . '/src/template.function.php',
         '4497162affd5dbda9202a35ac3a5f40d' => __DIR__ . '/../..' . '/src/file.function.php',
+        '7a85d8af1ca58319ffad0e16a7ac7e21' => __DIR__ . '/../..' . '/src/data.function.php',
     );
 
     public static $classMap = array (
