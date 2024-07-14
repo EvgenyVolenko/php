@@ -28,7 +28,7 @@ function addFunction(array $config): string
 
     $name = readline("Введите имя: ");
 
-    if (!validateName($name)) {
+    if (validateName($name)) {
         return handleError("Введена некорректная информация") . PHP_EOL;
     }
 
@@ -115,7 +115,7 @@ function delProfileByName(array $config): string
 
         $name = readline("Введите имя: ");
 
-        if (!validateName($name)) {
+        if (validateName($name)) {
             return handleError("Введена некорректная информация") . PHP_EOL;
         }
 
