@@ -26,7 +26,6 @@ function validateDate(string $date): bool
 function validateName(string $name): bool
 {
     if (preg_match("/[^a-zA-Zа-яёА-ЯЁ ]/u", $name)) {
-        print_r($name);
         return false;
     }
     if (mb_strlen($name) > 20) {
