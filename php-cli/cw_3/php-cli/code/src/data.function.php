@@ -1,27 +1,6 @@
 <?php
 
-// $address = '/code/birthdays.txt';
-
-// $name = readline("Введите имя: ");
-// $date = readline("Введите дату рождения в формате ДД-ММ-ГГГГ: ");
-
-// if (validate($date)) {
-//     $data = $name . ", " . $date . "\r\n";
-
-//     $fileHandler = fopen($address, 'a');
-
-//     if (fwrite($fileHandler, $data)) {
-//         echo "Запись $data добавлена в файл $address";
-//     } else {
-//         echo "Произошла ошибка записи. Данные не сохранены";
-//     }
-
-//     fclose($fileHandler);
-// } else {
-//     echo "Введена некорректная информация";
-// }
-
-function validate(string $date): bool
+function validateDate(string $date): bool
 {
     $dateBlocks = explode("-", $date);
 
@@ -38,6 +17,19 @@ function validate(string $date): bool
     }
 
     if (isset($dateBlocks[2]) && (int)$dateBlocks[2] > date('Y')) {
+        return false;
+    }
+
+    return true;
+}
+
+function validateName(string $name): bool
+{
+    if (preg_match("/[^a-zA-Zа-яёА-ЯЁ ]/u", $name)) {
+        print_r($name);
+        return false;
+    }
+    if (mb_strlen($name) > 20) {
         return false;
     }
 

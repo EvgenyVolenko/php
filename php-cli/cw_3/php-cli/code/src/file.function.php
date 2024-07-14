@@ -27,9 +27,15 @@ function addFunction(array $config): string
     $address = $config['storage']['address'];
 
     $name = readline("Введите имя: ");
+
+    if (!validateName($name)) {
+        return handleError("Введена некорректная информация") . PHP_EOL;
+    }
+
     $date = readline("Введите дату рождения в формате ДД-ММ-ГГГГ: ");
 
-    if (validate($date)) {
+
+    if (validateDate($date)) {
         $data = $name . ", " . $date . "\r\n";
 
         $fileHandler = fopen($address, 'a');
@@ -60,6 +66,92 @@ function clearFunction(array $config): string
         return "Файл очищен";
     } else {
         return handleError("Файл не существует");
+    }
+}
+
+function findProfilesTodayBirthday(array $config): string
+{
+    $address = $config['storage']['address'];
+
+    if (file_exists($address) && is_readable($address)) {
+        $timeZone = $config['localSetings']['timeZone'];
+        if ($timeZone) {
+            date_default_timezone_set($timeZone);
+        }
+
+        $file = fopen($address, "r");
+
+        $result = [];
+        $today = explode('-', date("d-m-Y"));
+
+        while (!feof($file)) {
+            $item = explode(',', fgets($file));
+            if ($item[0] !== '') {
+                $dateBlocks = explode("-", trim($item[1]));
+                if ($today[0] === $dateBlocks[0] && $today[1] === $dateBlocks[1]) {
+                    array_push($result, implode($item));
+                }
+            }
+        }
+
+        if (count($result) > 0) {
+            array_unshift($result, 'Сегодня день рождения у:' . PHP_EOL);
+        } else {
+            return 'Сегодня нет именинников!';
+        }
+
+        fclose($file);
+        return implode($result);
+    } else {
+        return handleError("Файл данных не существует");
+    }
+}
+
+function delProfileByName(array $config): string
+{
+    $address = $config['storage']['address'];
+
+    if (file_exists($address) && is_readable($address)) {
+
+        $name = readline("Введите имя: ");
+
+        if (!validateName($name)) {
+            return handleError("Введена некорректная информация") . PHP_EOL;
+        }
+
+        $fileHandler = fopen($address, "r");
+
+        $contents = '';
+        $marker = false;
+
+        while (!feof($fileHandler)) {
+            $item = explode(',', fgets($fileHandler));
+            if ($item[0] !== '') {
+                if (mb_strtolower($name) === mb_strtolower($item[0])) {
+                    $marker = true;
+                } else {
+                    $contents .= $item[0] . "," . $item[1];
+                }
+            }
+        }
+
+        fclose($fileHandler);
+
+        if (!$marker) {
+            return handleError("Указанного пользователя нет в файле!") . PHP_EOL;;
+        }
+
+        $fileHandler = fopen($address, "w");
+
+        if (fwrite($fileHandler, $contents)) {
+            return "Пользователь $name удален из файла $address" . PHP_EOL
+                . "Теперь в файле:" . PHP_EOL
+                . readAllFunction($config);
+        }
+
+        fclose($fileHandler);
+    } else {
+        return handleError("Файл данных не существует");
     }
 }
 
