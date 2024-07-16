@@ -111,7 +111,7 @@ function delProfileByName(array $config): string
 {
     $address = $config['storage']['address'];
 
-    if (file_exists($address) && is_readable($address)) {
+    if (file_exists($address) && is_readable($address) && is_writable(($address))) {
 
         $name = readline("Введите имя: ");
 
