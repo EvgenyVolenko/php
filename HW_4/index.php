@@ -1,27 +1,44 @@
 <?php
 
+interface ActionWithBook
+{
+    public function getBookForRead(): string;
+}
 
-abstract class AbstractBook
+abstract class AbstractBook implements ActionWithBook
 {
     protected string $name;
     protected array $authors;
     protected int $shelfId;
+    protected int $readStat = 0;
 
     public function __construct(
         string $name,
         array $authors,
-        int $shelfId = 0
+        int $shelfId = 0,
+        int $readStat = 0
     ) {
         $this->name = $name;
         $this->authors = $authors;
         $this->shelfId = $shelfId;
     }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getReadStat()
+    {
+        return $this->readStat;
+    }
 }
 
 class Book extends AbstractBook
 {
-    public function getName(): string
+    public function getBookForRead(): string
     {
+        $this->readStat++;
         return $this->name;
     }
 }
@@ -37,6 +54,12 @@ class DigitalBook extends Book
     ) {
         parent::__construct($name, $authors);
         $this->link = $link;
+    }
+
+    public function getBookForRead(): string
+    {
+        $this->readStat++;
+        return $this->link;
     }
 }
 
@@ -74,6 +97,7 @@ class Shelf
         return $this->shelfId;
     }
 }
+
 class Room
 {
     private int $roomId;
@@ -96,6 +120,16 @@ class Room
         }
         return 'Нет такой полки';
     }
+
+    public function getBookByName($name): string
+    {
+        foreach ($this->shelfS as $key => $value) {
+            if ($value->getName() === $name) {
+                return $this->address;
+            }
+        }
+        return 'Нет такой книги';
+    }
 }
 
 $room = new Room(1, 'Moscow', 3);
@@ -108,3 +142,6 @@ $room->getShelf(1)->addBook($book);
 $room->getShelf(1)->addBook($book);
 print_r($room->getShelf(1)->addBook($book) . PHP_EOL);
 print_r($room->getShelf(1)->addBook($book) . PHP_EOL);
+print_r($digBook->getBookForRead() . PHP_EOL);
+$digBook->getBookForRead();
+print_r($digBook->getReadStat());
