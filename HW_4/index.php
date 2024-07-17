@@ -39,7 +39,7 @@ class Book extends AbstractBook
     public function getBookForRead(): string
     {
         $this->readStat++;
-        return $this->name;
+        return $this->shelfId;
     }
 }
 
