@@ -21,6 +21,7 @@ class UserController
         return $render->renderPage(
             'save-user-result.twig',
             [
+                'title' => 'Результат добавления пользователя',
                 'name' => $newUser->getUserName(),
                 'birthday' => $newUserGET['birthday']
             ]
