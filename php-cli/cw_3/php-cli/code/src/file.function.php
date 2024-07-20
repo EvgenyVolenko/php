@@ -34,7 +34,6 @@ function addFunction(array $config): string
 
     $date = readline("Введите дату рождения в формате ДД-ММ-ГГГГ: ");
 
-
     if (validateDate($date)) {
         $data = $name . ", " . $date . "\r\n";
 

@@ -50,10 +50,17 @@ final class Application
                     []
                 );
             } else {
-                return "Метод не существует";
+
+                header("HTTP/1.1 404 Not Found");
+                header("Location: /error-page.html");
+                die();
+                // return "Метод не существует";
             }
         } else {
-            return "Класс $this->controllerName не существует";
+            header("HTTP/1.1 404 Not Found");
+            header("Location: /error-page.html");
+            die();
+            // return "Класс $this->controllerName не существует";
         }
     }
 }

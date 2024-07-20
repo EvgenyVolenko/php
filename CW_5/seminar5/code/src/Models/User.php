@@ -54,7 +54,7 @@ class User
                 $user = new User(
                     $userArray[0]
                 );
-                $user->setBirthdayFromString($userArray[1]);
+                $user->setBirthdayFromString(trim($userArray[1]));
 
                 $users[] = $user;
             }
@@ -65,5 +65,16 @@ class User
         } else {
             return false;
         }
+    }
+
+    static function addUser(array $userGET): bool
+    {
+        $address = $address = $_SERVER['DOCUMENT_ROOT'] . Application::config()['storage']['address'];
+
+        $data = PHP_EOL . $userGET['name'] . ", " . $userGET['birthday'];
+
+        $fileHandler = fopen($address, 'a');
+
+        return fwrite($fileHandler, $data);
     }
 }
