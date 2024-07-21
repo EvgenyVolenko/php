@@ -69,7 +69,7 @@ class User
 
     static function addUser(array $userGET): bool
     {
-        $address = $address = $_SERVER['DOCUMENT_ROOT'] . Application::config()['storage']['address'];
+        $address = $_SERVER['DOCUMENT_ROOT'] . Application::config()['storage']['address'];
 
         $data = PHP_EOL . $userGET['name'] . ", " . $userGET['birthday'];
 
