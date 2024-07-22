@@ -35,21 +35,24 @@ class Render
         return $template->render($templateVariables);
     }
 
-    // public static function renderExceptionPage(Exception $exception): string
-    // {
-    //     $contentTemplateName = "error.twig";
-    //     $viewFolder = '/src/Domain/Views/';
+    public static function renderExceptionPage(Exception $exception): string
+    {
+        $contentTemplateName = "error.twig";
+        $viewFolder = '/src/Domain/Views/';
 
-    //     $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . $viewFolder);
-    //     $environment = new Environment($loader, [
-    //         // 'cache' => $_SERVER['DOCUMENT_ROOT'] . '/cache/',
-    //     ]);
+        $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . $viewFolder);
+        $environment = new Environment($loader, [
+            // 'cache' => $_SERVER['DOCUMENT_ROOT'] . '/cache/',
+        ]);
 
-    //     $template = $environment->load('main.twig');
+        $template = $environment->load('main.twig');
+        $templateVariables['header'] = 'header.twig';
+        $templateVariables['nav'] = 'navigation.twig';
+        $templateVariables['footer'] = 'footer.twig';
 
-    //     $templateVariables['content_template_name'] = $contentTemplateName;
-    //     $templateVariables['error_message'] = $exception->getMessage();
+        $templateVariables['content_template_name'] = $contentTemplateName;
+        $templateVariables['error_message'] = $exception->getMessage();
 
-    //     return $template->render($templateVariables);
-    // }
+        return $template->render($templateVariables);
+    }
 }
