@@ -160,6 +160,10 @@ class User
             $counter++;
         }
 
+        $sql .= " WHERE id_user = :id_user";
+
+        $userDataArray['id_user'] = $this->getUserId();
+
         $handler = Application::$storage->get()->prepare($sql);
         $handler->execute($userDataArray);
     }

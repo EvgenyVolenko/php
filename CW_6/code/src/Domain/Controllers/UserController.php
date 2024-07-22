@@ -71,7 +71,8 @@ class UserController
 
     public function actionUpdate(): string
     {
-        if (User::exists($_GET['id'])) {
+        $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : 0;
+        if (User::exists($id)) {
             $user = new User();
             $user->setUserId($_GET['id']);
 
