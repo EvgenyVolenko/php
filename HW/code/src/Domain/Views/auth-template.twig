@@ -1,7 +1,8 @@
 {% if not user_authorized %}
-  <p>
+  <div>
     <a href="/user/auth/">Вход в систему</a>
-  </p>
+    <p>{{ auth_error }}</p>
+  </div>
 {% else %}
   <p>Добро пожаловать на сайт {{ userName }}!</p>
   <p>

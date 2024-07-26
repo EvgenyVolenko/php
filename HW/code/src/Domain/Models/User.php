@@ -188,4 +188,23 @@ class User
         $this->setBirthdayFromString($_POST['birthday']);
         $this->userLogin = $this->userName . (string)rand(1000, 9999);
     }
+
+
+    public static function getUserRolesById(): array
+    {
+        $roles = [];
+        $rolesSql = "SELECT * FROM user_roles WHERE id_user = :id";
+
+        $handler = Application::$storage->get()->prepare($rolesSql);
+
+        $handler->execute(['id' => $_SESSION['id_user']]);
+        $result = $handler->fetchAll();
+
+        if (!empty($result)) {
+            foreach ($result as $role) {
+                $roles[] = $role['role'];
+            }
+        }
+        return $roles;
+    }
 }

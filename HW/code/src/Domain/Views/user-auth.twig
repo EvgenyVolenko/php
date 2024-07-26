@@ -1,7 +1,3 @@
-{% if not auth_success %}
-  {{ auth_error }}
-{% endif %}
-
 <form action="/user/login/" method="post">
   <input id="csrf_token" type="hidden" name="csrf_token" value="{{ csrf_token }}" />
   <p>
@@ -11,6 +7,10 @@
   <p>
     <label for="user-password">Пароль:</label>
     <input id="user-password" type="password" name="password" />
+  </p>
+  <p>
+    <input id="user-remember" type="checkbox" name="user-remember" value="remember" />
+    <label for="user-remember">Запомнить меня</label>
   </p>
   <p>
     <input type="submit" value="Войти" />

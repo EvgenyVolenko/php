@@ -16,6 +16,8 @@ class UserController extends AbstractController
         'actionEdit' => ['admin'],
         'actionIndex' => ['admin'],
         'actionLogout' => ['admin'],
+        'actionAuth' => ['user'],
+        'actionLogin' => ['user']
     ];
 
     public function actionIndex()
@@ -111,6 +113,8 @@ class UserController extends AbstractController
 
     public function actionLogin(): string
     {
+
+        $render = new Render();
         $result = false;
 
         if (isset($_POST['login']) && isset($_POST['password'])) {
@@ -118,18 +122,16 @@ class UserController extends AbstractController
         }
 
         if (!$result) {
-            $render = new Render();
-
-            return $render->renderPageWithForm(
-                'user-auth.twig',
+            return $render->renderPage(
+                'auth-template.twig',
                 [
                     'title' => 'Форма логина',
-                    'auth-success' => false,
-                    'auth-error' => 'Неверные логин или пароль'
+                    'user_authorized' => false,
+                    'auth_error' => 'Неверные логин или пароль'
                 ]
             );
         } else {
-            $render = new Render();
+
             // header('Location: /');
             return $render->renderPageWithForm(
                 'auth-template.twig',
@@ -146,6 +148,8 @@ class UserController extends AbstractController
     {
         session_destroy();
         unset($_SESSION['user_name']);
+        unset($_SESSION['user_lastname']);
+        unset($_SESSION['id_user']);
         header("Location: /");
         die();
     }

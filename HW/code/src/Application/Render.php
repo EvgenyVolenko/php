@@ -55,7 +55,7 @@ class Render
         return $template->render($templateVariables);
     }
 
-    public function renderPageWithForm(string $contentTemplateName = 'page-index.tpl', array $templateVariables = [])
+    public function renderPageWithForm(string $contentTemplateName = 'page-index.twig', array $templateVariables = [])
     {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 

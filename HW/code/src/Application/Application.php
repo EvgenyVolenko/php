@@ -30,6 +30,7 @@ final class Application
     public function run(): string
     {
         session_start();
+        // session_destroy();
 
         $routeArray = explode('/', $_SERVER['REQUEST_URI']);
 
@@ -92,7 +93,6 @@ final class Application
 
         $rules = $controllerInstance->getActionsPermissions($methodName);
 
-        $rules[] = 'user';
         $isAllowed = false;
 
         if (!empty($rules)) {
