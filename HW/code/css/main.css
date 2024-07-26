@@ -5,7 +5,11 @@
 }
 
 p {
-    color: #00f;
+    color: green;
+}
+
+a {
+    text-decoration: none;
 }
 
 .header {
@@ -23,10 +27,6 @@ p {
     flex-direction: column;
     gap: 8px;
     background-color: #d3d3d3;
-}
-
-.navigation a {
-    text-decoration: none;
 }
 
 .main {

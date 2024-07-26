@@ -11,15 +11,17 @@ class User
     private ?string $userName;
     private ?string $userLastName;
     private ?int $userBirthday;
+    private ?string $userLogin;
 
     // private static string $storageAddress = '/storage/birthdays.txt';
 
-    public function __construct(string $name = null, string $lastName = null, int $birthday = null, int $id_user = null)
+    public function __construct(string $name = null, string $lastName = null, int $birthday = null, int $id_user = null, string $login = null)
     {
         $this->userName = $name;
         $this->userLastName = $lastName;
         $this->userBirthday = $birthday;
         $this->idUser = $id_user;
+        $this->userLogin = $login;
     }
     public function setUserId(int $id_user): void
     {
@@ -54,6 +56,11 @@ class User
     public function getUserBirthday(): ?int
     {
         return $this->userBirthday;
+    }
+
+    public function setUserLogin(string $login): void
+    {
+        $this->userLogin = $login;
     }
 
     public function setBirthdayFromString(string $birthdayString): void
@@ -107,6 +114,10 @@ class User
             $result = false;
         }
 
+        if (preg_match('/<([^>]+)>/', $_POST['name']) || preg_match('/<([^>]+)>/', $_POST['lastname'])) {
+            $result =  false;
+        }
+
         if (!preg_match('/^(\d{2}-\d{2}-\d{4})$/', $_POST['birthday'])) {
             $result =  false;
         }
@@ -120,13 +131,14 @@ class User
 
     public function saveToStorage()
     {
-        $sql = "INSERT INTO users(user_name, user_lastname, user_birthday_timestamp) VALUES (:user_name, :user_lastname, :user_birthday)";
+        $sql = "INSERT INTO users(user_name, user_lastname, user_birthday_timestamp, user_login) VALUES (:user_name, :user_lastname, :user_birthday, :user_login)";
 
         $handler = Application::$storage->get()->prepare($sql);
         $handler->execute([
             'user_name' => $this->userName,
             'user_lastname' => $this->userLastName,
-            'user_birthday' => $this->userBirthday
+            'user_birthday' => $this->userBirthday,
+            'user_login' => $this->userLogin
         ]);
     }
 
@@ -148,27 +160,17 @@ class User
         }
     }
 
-    public function updateUser(array $userDataArray): void
+    public function updateUser(): void
     {
-        $sql = "UPDATE users SET ";
-
-        $counter = 0;
-        foreach ($userDataArray as $key => $value) {
-            $sql .= $key . " = :" . $key;
-
-            if ($counter != count($userDataArray) - 1) {
-                $sql .= ",";
-            }
-
-            $counter++;
-        }
-
-        $sql .= " WHERE id_user = :id_user";
-
-        $userDataArray['id_user'] = $this->getUserId();
+        $sql = "UPDATE users SET user_name = :user_name, user_lastname = :user_lastname, user_birthday_timestamp = :user_birthday WHERE id_user = :id_user";
 
         $handler = Application::$storage->get()->prepare($sql);
-        $handler->execute($userDataArray);
+        $handler->execute([
+            'user_name' => $this->userName,
+            'user_lastname' => $this->userLastName,
+            'user_birthday' => $this->userBirthday,
+            'id_user' => $this->idUser
+        ]);
     }
 
     public static function deleteFromStorage(int $user_id): void
@@ -184,5 +186,6 @@ class User
         $this->userName = htmlspecialchars($_POST['name']);
         $this->userLastName = htmlspecialchars($_POST['lastname']);
         $this->setBirthdayFromString($_POST['birthday']);
+        $this->userLogin = $this->userName . (string)rand(1000, 9999);
     }
 }

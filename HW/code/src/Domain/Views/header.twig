@@ -1,7 +1,7 @@
 <header class="header">
   <h1>Наша шапка</h1>
-  <h3>Текущее время по Гринвичу - {{ some_date_string|date('H:m:s') }}</h3>
+  <h3>Текущее время по Гринвичу - {{ date()|date('H:m:s') }}</h3>
   <p>
-    <a href="/user/login/">Войти</a>
+    <a href="/user/auth/">Войти</a>
   </p>
 </header>

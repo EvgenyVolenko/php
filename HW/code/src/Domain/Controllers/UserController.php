@@ -68,7 +68,7 @@ class UserController extends AbstractController
         $render = new Render();
 
         return $render->renderPageWithForm(
-            'user-form.tpl',
+            'user-form.twig',
             [
                 'title' => 'Форма создания пользователя'
             ]
@@ -80,7 +80,7 @@ class UserController extends AbstractController
         $render = new Render();
 
         return $render->renderPageWithForm(
-            'user-auth.tpl',
+            'user-auth.twig',
             [
                 'title' => 'Форма логина'
             ]
@@ -129,8 +129,16 @@ class UserController extends AbstractController
                 ]
             );
         } else {
-            header('Location: /');
-            return "";
+            $render = new Render();
+            // header('Location: /');
+            return $render->renderPageWithForm(
+                'auth-template.twig',
+                [
+                    'title' => 'Форма логина',
+                    'user_authorized' => true,
+                    'userName' => $_SESSION['user_name']
+                ]
+            );
         }
     }
 
@@ -144,28 +152,31 @@ class UserController extends AbstractController
 
     public function actionUpdate(): string
     {
+
         $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : 0;
+
         if (User::exists($id)) {
-            $user = new User();
-            $user->setUserId($_GET['id']);
+            if (User::validateRequestData()) {
+                $user = User::getUserFromStorageById($id);
+                if (isset($_POST['name']) && $_POST['name'] !== $user->getUserName()) {
+                    $user->setName($_POST['name']);
+                }
+                if (isset($_POST['lastname']) && $_POST['lastname'] !== $user->getUserLastName()) {
+                    $user->setLastName($_POST['lastname']);
+                }
+                if (isset($_POST['birthday']) && $_POST['birthday'] !== date('d-m-Y', $user->getUserBirthday())) {
+                    $user->setBirthdayFromString($_POST['birthday']);
+                }
 
-            $arrayData = [];
-
-            if (isset($_GET['name']))
-                $arrayData['user_name'] = $_GET['name'];
-
-            if (isset($_GET['lastname'])) {
-                $arrayData['user_lastname'] = $_GET['lastname'];
+                $user->updateUser($user);
             }
-
-            $user->updateUser($arrayData);
         } else {
             throw new \Exception("Пользователь не существует");
         }
 
         $render = new Render();
         return $render->renderPage(
-            'user-created.twig',
+            'user-changed.twig',
             [
                 'title' => 'Пользователь обновлен',
                 'message' => "Обновлен пользователь " . $user->getUserId()
@@ -173,14 +184,39 @@ class UserController extends AbstractController
         );
     }
 
+    public function actionChange(): string
+    {
+        $render = new Render();
+
+        $id = isset($_GET['id']) && is_numeric($_GET['id']) ? (int)$_GET['id'] : 0;
+
+        if (User::exists($id)) {
+            $user = User::getUserFromStorageById($id);
+        } else {
+            throw new \Exception("Пользователь не существует");
+        }
+
+        return $render->renderPageWithForm(
+            'user-update.twig',
+            [
+                'title' => 'Форма изменения пользователя',
+                'name' => $user->getUserName(),
+                'lastname' => $user->getUserLastName(),
+                'birthday' => date('m-d-Y', $user->getUserBirthday()),
+                'id' => $id
+            ]
+        );
+    }
+
     public function actionDelete(): string
     {
+
         if (User::exists($_GET['id'])) {
             User::deleteFromStorage($_GET['id']);
 
             $render = new Render();
 
-            return $render->renderPage(
+            return $render->renderPageWithForm(
                 'user-removed.twig',
                 []
             );

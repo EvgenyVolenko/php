@@ -1,9 +1,16 @@
+<a href="/user/edit">Добавить пользователя</a>
+
 <p>Список пользователей в хранилище</p>
 
 <ul id="navigation">
   {% for user in users %}
     <li>
       <a href="/user/show/?id={{ user.getUserId() }}">id-{{ user.getUserId() }} {{ user.getUserName() }} {{ user.getUserLastName() }}. День рождения: {{ user.getUserBirthday()|date('d.m.Y') }}</a>
+
+      <div>
+        <a href="user/change/?id={{ user.getUserId() }}" style="text-decoration: none; color:chocolate;">Изменить</a>
+        <a href="user/delete/?id={{ user.getUserId() }}" style="text-decoration: none; color:red;">Удалить</a>
+      </div>
     </li>
   {% endfor %}
 </ul>
