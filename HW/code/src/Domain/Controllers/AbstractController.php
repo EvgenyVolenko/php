@@ -2,7 +2,6 @@
 
 namespace Geekbrains\Application1\Domain\Controllers;
 
-use Geekbrains\Application1\Application\Application;
 use Geekbrains\Application1\Domain\Models\User;
 
 class AbstractController
@@ -13,13 +12,11 @@ class AbstractController
     public function getUserRoles(): array
     {
         $roles = [];
+        $roles[] = 'user';
 
         if (isset($_SESSION['id_user'])) {
             $roles = User::getUserRolesById();
-        } else {
-            $roles[] = 'user';
         }
-
         return $roles;
     }
 

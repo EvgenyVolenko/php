@@ -5,7 +5,15 @@
 <ul id="navigation">
   {% for user in users %}
     <li>
-      <a href="/user/show/?id={{ user.getUserId() }}">id-{{ user.getUserId() }} {{ user.getUserName() }} {{ user.getUserLastName() }}. День рождения: {{ user.getUserBirthday()|date('d.m.Y') }}</a>
+      <a href="/user/show/?id={{ user.getUserId() }}">
+        id-{{ user.getUserId() }}
+        {{ user.getUserName() }}
+        {{ user.getUserLastName() }}. День рождения:{% if user.getUserBirthday() is empty %}
+          <b>не установлен</b>
+        {% else %}
+          {{ user.getUserBirthday()|date('d.m.Y') }}
+        {% endif %}
+      </a>
 
       <div>
         <a href="user/change/?id={{ user.getUserId() }}" style="text-decoration: none; color:chocolate;">Изменить</a>

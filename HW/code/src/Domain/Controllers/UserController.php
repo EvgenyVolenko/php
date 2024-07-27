@@ -16,6 +16,9 @@ class UserController extends AbstractController
         'actionEdit' => ['admin'],
         'actionIndex' => ['admin'],
         'actionLogout' => ['admin'],
+        'actionUpdate' => ['admin'],
+        'actionChange' => ['admin'],
+        'actionDelete' => ['admin'],
         'actionAuth' => ['user'],
         'actionLogin' => ['user']
     ];
@@ -108,7 +111,11 @@ class UserController extends AbstractController
 
     public function actionHash(): string
     {
-        return Auth::getPasswordHash($_GET['pass_string']);
+        if (isset($_GET['pass_string']) && !empty($_GET['pass_string'])) {
+            return Auth::getPasswordHash($_GET['pass_string']);
+        } else {
+            throw new \Exception("Невозможно сгенерировать хэш. Не передан пароль!");
+        }
     }
 
     public function actionLogin(): string
