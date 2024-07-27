@@ -6,7 +6,7 @@ class Auth
 {
     public static function getPasswordHash(string $rawPassword): string
     {
-        return password_hash($_GET['pass_string'], PASSWORD_BCRYPT);
+        return password_hash($rawPassword, PASSWORD_BCRYPT);
     }
 
     public function proceedAuth(string $login, string $password): bool

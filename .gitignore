@@ -400,3 +400,4 @@ FodyWeavers.xsd
 #My project
 .env
 db/
+vendor/
