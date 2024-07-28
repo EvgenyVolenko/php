@@ -8,6 +8,12 @@ use Geekbrains\Application1\Infrastructure\Storage;
 use Geekbrains\Application1\Domain\Controllers\AbstractController;
 use Geekbrains\Application1\Application\Auth;
 
+use Monolog\Level;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
+
+
 final class Application
 {
 
@@ -19,12 +25,48 @@ final class Application
     public static Config $config;
     public static Storage $storage;
     public static Auth $auth;
+    public static Logger $logger;
 
     public function __construct()
     {
         Application::$config = new Config();
         Application::$storage = new Storage();
         Application::$auth = new Auth();
+
+        Application::$logger = new Logger('application_logger');
+        Application::$logger->pushHandler(
+            new StreamHandler(
+                $_SERVER['DOCUMENT_ROOT'] . "/log/"
+                    . Application::$config->get()['log']['LOGS_FILE'] . "-" . date("Y-m-d") . ".log",
+                Level::Debug
+            )
+        );
+        Application::$logger->pushHandler(new FirePHPHandler());
+    }
+
+    public function runApp(): string
+    {
+        $memory_start = memory_get_usage();
+        $result = $this->run();
+        $memory_end = memory_get_usage();
+        // добавить if config DB_MEMORY_LOG ... Application::$config->get()['log']['DB_MEMORY_LOG']!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        $this->saveMemoryLog($memory_end - $memory_start);
+
+        return $result;
+    }
+
+    private function saveMemoryLog(int $memory): void
+    {
+        $logSql = "INSERT INTO memory_log(`user_agent`, `log_datetime`, `url`, `memory_volume`)
+        VALUES (:user_agent, :log_datetime, :url, :memory_volume)";
+
+        $handler = Application::$storage->get()->prepare($logSql);
+        $handler->execute([
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+            'log_datetime' => date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME']),
+            'url' => $_SERVER['REQUEST_URI'],
+            'memory_volume' => $memory
+        ]);
     }
 
     public function run(): string
@@ -72,6 +114,10 @@ final class Application
                     );
                 }
             } else {
+                $logMessage = "Метод " . $this->methodName . " не существует в контроллере " . $this->controllerName . " | ";
+                $logMessage .= "Попытка вызова адреса " .
+                    $_SERVER['REQUEST_URI'];
+                Application::$logger->error($logMessage);
                 throw new Exception("Метод " .  $this->methodName . " не существует");
                 // header("HTTP/1.1 404 Not Found");
                 // header("Location: /error-page.html");
@@ -79,6 +125,9 @@ final class Application
                 // return "Метод не существует";
             }
         } else {
+            $logMessage = "Класс " . $this->controllerName . " не существует " . " | ";
+            $logMessage .= "Попытка вызова адреса " . $_SERVER['REQUEST_URI'];
+            Application::$logger->error($logMessage);
             throw new Exception("Класс $this->controllerName не существует");
             // header("HTTP/1.1 404 Not Found");
             // header("Location: /error-page.html");

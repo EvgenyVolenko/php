@@ -27,6 +27,7 @@ class UserController extends AbstractController
     {
         $render = new Render();
         $users = User::getAllUsersFromStorage();
+        // var_dump($users);
 
         if (!$users) {
             return $render->renderPage(

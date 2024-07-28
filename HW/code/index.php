@@ -1,7 +1,5 @@
 <?php
 
-$memory_start = memory_get_usage();
-
 require_once('./vendor/autoload.php');
 
 use Geekbrains\Application1\Application\Application;
@@ -9,11 +7,10 @@ use Geekbrains\Application1\Application\Render;
 
 try {
     $app = new Application();
-    echo $app->run();
+
+    $result = $app->runApp();
+
+    echo $result;
 } catch (Exception $e) {
     echo Render::renderExceptionPage($e);
 }
-
-$memory_end = memory_get_usage();
-
-echo "<h4>Потреблено " . ($memory_end - $memory_start) . " байт памяти</h4>";

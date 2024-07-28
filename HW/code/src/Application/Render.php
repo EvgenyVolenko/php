@@ -31,6 +31,17 @@ class Render
         $templateVariables['footer'] = 'footer.twig';
         $templateVariables['content_template_name'] = $contentTemplateName;
 
+        if (isset($_SESSION['user_name'])) {
+            $templateVariables['user_authorized'] = true;
+        }
+
+        // Временный код
+        // ob_start();
+        // \xdebug_info();
+        // $xdebug = ob_get_clean();
+        // $templateVariables['xdebug'] = $xdebug;
+        // -----
+
         return $template->render($templateVariables);
     }
 

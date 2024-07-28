@@ -13,7 +13,7 @@ class Auth
     {
 
         if (!$login) {
-            header('Location: /');
+            header('Location: /'); //!!!!!!!!!!!!!!!!!!!!!!!!!
             die();
         }
 
