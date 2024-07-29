@@ -49,8 +49,10 @@ final class Application
         $memory_start = memory_get_usage();
         $result = $this->run();
         $memory_end = memory_get_usage();
-        // добавить if config DB_MEMORY_LOG ... Application::$config->get()['log']['DB_MEMORY_LOG']!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        $this->saveMemoryLog($memory_end - $memory_start);
+
+        if (filter_var(Application::$config->get()['log']['DB_MEMORY_LOG'], FILTER_VALIDATE_BOOL)) {
+            $this->saveMemoryLog($memory_end - $memory_start);
+        }
 
         return $result;
     }
@@ -72,6 +74,8 @@ final class Application
     public function run(): string
     {
         session_start();
+
+        Application::$auth->restoreSession();
         // session_destroy();
 
         $routeArray = explode('/', $_SERVER['REQUEST_URI']);

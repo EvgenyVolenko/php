@@ -68,21 +68,21 @@ class User
         $this->userBirthday = strtotime($birthdayString);
     }
 
-    public static function getUserFromStorageById(int $id): User
+    public static function getUserFromStorageById(int $id): array
     {
         $sql = "SELECT * FROM users WHERE id_user = :id";
         $handler = Application::$storage->get()->prepare($sql);
         $handler->execute(['id' => $id]);
         $result = $handler->fetch();
 
-        return new User(
-            $result['user_name'],
-            $result['user_lastname'],
-            $result['user_birthday_timestamp'],
-            $result['id_user']
-        );
+        return $result;
+        // return new User(
+        //     $result['user_name'],
+        //     $result['user_lastname'],
+        //     $result['user_birthday_timestamp'],
+        //     $result['id_user']
+        // );
     }
-
 
     public static function getAllUsersFromStorage(): array
     {
@@ -162,14 +162,15 @@ class User
 
     public function updateUser(): void
     {
-        $sql = "UPDATE users SET user_name = :user_name, user_lastname = :user_lastname, user_birthday_timestamp = :user_birthday WHERE id_user = :id_user";
+        $sql = "UPDATE users SET user_name = :user_name, user_lastname = :user_lastname, user_birthday_timestamp = :user_birthday, user_login = :user_login WHERE id_user = :id_user";
 
         $handler = Application::$storage->get()->prepare($sql);
         $handler->execute([
             'user_name' => $this->userName,
             'user_lastname' => $this->userLastName,
             'user_birthday' => $this->userBirthday,
-            'id_user' => $this->idUser
+            'id_user' => $this->idUser,
+            'user_login' => $this->userLogin
         ]);
     }
 
@@ -197,7 +198,7 @@ class User
 
         $handler = Application::$storage->get()->prepare($rolesSql);
 
-        $handler->execute(['id' => $_SESSION['id_user']]);
+        $handler->execute(['id' => $_SESSION['auth']['id_user']]);
         $result = $handler->fetchAll();
 
         if (!empty($result)) {
@@ -206,5 +207,42 @@ class User
             }
         }
         return $roles;
+    }
+
+    public static function destroyToken(): array
+    {
+        $userSql = "UPDATE users SET token = :token WHERE id_user = :id";
+
+        $handler = Application::$storage->get()->prepare($userSql);
+        $handler->execute(['token' => md5(bin2hex(random_bytes(16))), 'id' => $_SESSION['auth']['id_user']]);
+        $result = $handler->fetchAll();
+
+        return $result[0] ?? [];
+    }
+
+    public static function verifyToken(string $token): array
+    {
+        $userSql = "SELECT * FROM users WHERE token = :token";
+
+        $handler = Application::$storage->get()->prepare($userSql);
+        $handler->execute(['token' => $token]);
+        $result = $handler->fetchAll();
+
+        return $result[0] ?? [];
+    }
+
+    public static function setToken(int $userID, string $token): void
+    {
+        $userSql = "UPDATE users SET token = :token WHERE id_user = :id";
+
+        $handler = Application::$storage->get()->prepare($userSql);
+        $handler->execute(['id' => $userID, 'token' => $token]);
+
+        setcookie(
+            'auth_token',
+            $token,
+            time() + 60 * 60 * 24 * 30,
+            '/'
+        );
     }
 }

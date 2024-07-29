@@ -12,16 +12,18 @@ class AbstractController
     public function getUserRoles(): array
     {
         $roles = [];
-        $roles[] = 'user';
 
-        if (isset($_SESSION['id_user'])) {
+        if (isset($_SESSION['auth']['id_user'])) {
             $roles = User::getUserRolesById();
         }
+
+        $roles[] = 'user';
+
         return $roles;
     }
 
     public function getActionsPermissions(string $methodName): array
     {
-        return $this->actionsPermissions[$methodName] ?? [];
+        return $this->actionsPermissions[$methodName] ?? ['user'];
     }
 }
