@@ -20,6 +20,7 @@ class Auth
                 $_SESSION['auth']['user_name'] = $userData['user_name'];
                 $_SESSION['auth']['user_lastname'] = $userData['user_lastname'];
                 $_SESSION['auth']['id_user'] = $userData['id_user'];
+                $_SESSION['auth']['user_admin'] = in_array('admin', User::getUserRolesById());
             }
         }
     }
@@ -48,6 +49,7 @@ class Auth
             $_SESSION['auth']['user_name'] = $result[0]['user_name'];
             $_SESSION['auth']['user_lastname'] = $result[0]['user_lastname'];
             $_SESSION['auth']['id_user'] = $result[0]['id_user'];
+            $_SESSION['auth']['user_admin'] = in_array('admin', User::getUserRolesById());
 
             return true;
         } else {

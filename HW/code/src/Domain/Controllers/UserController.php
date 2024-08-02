@@ -25,6 +25,7 @@ class UserController extends AbstractController
     {
         $render = new Render();
         $users = User::getAllUsersFromStorage();
+        $roleAdmin = isset($_SESSION['auth']['user_admin']) ? $_SESSION['auth']['user_admin'] : false;
 
         if (!$users) {
             return $render->renderPage(
@@ -39,7 +40,8 @@ class UserController extends AbstractController
                 'user-index.twig',
                 [
                     'title' => 'Список пользователей в хранилище',
-                    'users' => $users
+                    'users' => $users,
+                    'user_role' => $roleAdmin
                 ]
             );
         }
@@ -185,18 +187,10 @@ class UserController extends AbstractController
         User::destroyToken();
         session_destroy();
         unset($_SESSION['auth']);
-        // header("Location: /");
 
         $render = new Render();
 
-        return $render->renderPage(
-            // 'auth-template.twig',
-            // [
-            //     'title' => 'Форма логина',
-            //     'user_authorized' => false,
-            //     'auth_error' => 'Вы вышли из системы'
-            // ]
-        );
+        return $render->renderPage();
     }
 
     public function actionUpdate(): string
@@ -290,6 +284,6 @@ class UserController extends AbstractController
             }
         }
 
-        return json_encode($userData);
+        return json_encode($usersData);
     }
 }

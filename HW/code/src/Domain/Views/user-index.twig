@@ -1,4 +1,6 @@
-<a href="/user/edit">Добавить пользователя</a>
+{% if user_role %}
+  <a href="/user/edit" class="d-block text-end">Добавить пользователя</a>
+{% endif %}
 
 <h3>Список пользователей в хранилище</h3>
 
@@ -15,57 +17,26 @@
     <tbody>
       {% for user in users %}
         <tr>
-          <a href="/user/show/?id={{ user.getUserId() }}">
-            <td>{{ user.getUserId() }}</td>
-            <td>{{ user.getUserName() }}</td>
-            <td>{{ user.getUserLastName() }}</td>
+          <td>{{ user.getUserId() }}</td>
+          <td>{{ user.getUserName() }}</td>
+          <td>{{ user.getUserLastName() }}</td>
+          <td>
+            {% if user.getUserBirthday() is empty %}
+              <b>не установлен</b>
+            {% else %}
+              {{ user.getUserBirthday()|date('d.m.Y') }}
+            {% endif %}
+          </td>
+          {% if user_role %}
             <td>
-              {% if user.getUserBirthday() is empty %}
-                <b>не установлен</b>
-              {% else %}
-                {{ user.getUserBirthday()|date('d.m.Y') }}
-              {% endif %}
+              <a href="user/edit/?id={{ user.getUserId() }}" style="text-decoration: none; color:chocolate;">Изменить</a>
             </td>
-          </a>
-
-          <div>
-            <a href="user/edit/?id={{ user.getUserId() }}" style="text-decoration: none; color:chocolate;">Изменить</a>
-            <a href="user/delete/?id={{ user.getUserId() }}" style="text-decoration: none; color:red;">Удалить</a>
-          </div>
+            <td>
+              <a href="user/delete/?id={{ user.getUserId() }}" style="text-decoration: none; color:red;">Удалить</a>
+            </td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>
   </table>
-
-  <script>
-    let maxId = jQuery('.table-responsive tbody tr:last-child td:first-child').html()
-    
-    setInterval(() => {
-      jQuery
-        .ajax({
-          method: 'POST',
-          url: 'user/indexRefresh/',
-          data: { maxId: maxId }
-        })
-        .done((data) => {
-          //data - JSON response
-          //0 => [userid, username, userlastname, userbirthday]
-    
-          let users = jQuery.parseJSON(data)
-          if (users.length > 0) {
-            for (const k in users) {
-              let row = '<tr>'
-              row += '<td>' + users[k].userid + '</td>'
-              maxId = users[k].userid
-              row += '<td>' + users[k].username + '</td>'
-              row += '<td>' + users[k].userlastname + '</td>'
-              row += '<td>' + users[k].userbirthday + '</td>'
-              row += '</tr>'
-    
-              jQuery('.content-template tbody').append(row)
-            }
-          }
-        })
-    }, 5000)
-  </script>
 </div>

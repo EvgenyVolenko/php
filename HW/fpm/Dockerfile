@@ -10,4 +10,4 @@ WORKDIR /data
 
 VOLUME /data
 
-CMD ["php-fpm"]
+CMD ["composer install", "php-fpm"]
