@@ -10,7 +10,7 @@
             "request": "launch",
             "port": 9003,
             "pathMappings": {
-                "/data/mysite.local": "${workspaceFolder}/HW/code/"
+                "/data/mysite.local": "${workspaceFolder}/HW/code/public"
             }
         },
         {
@@ -19,7 +19,7 @@
             "request": "launch",
             "port": 9003,
             "pathMappings": {
-                "/data/mysite.local": "${workspaceFolder}/HW/code/"
+                "/data/mysite.local": "${workspaceFolder}/HW/code/public"
             }
         },
         {

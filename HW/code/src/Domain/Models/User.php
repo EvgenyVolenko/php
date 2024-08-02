@@ -84,9 +84,13 @@ class User
         // );
     }
 
-    public static function getAllUsersFromStorage(): array
+    public static function getAllUsersFromStorage(?int $limit = null): array
     {
         $sql = "SELECT * FROM users";
+
+        if (isset($limit) && $limit > 0) {
+            $sql .= " WHERE id_user > " . (int)$limit;
+        }
 
         $handler = Application::$storage->get()->prepare($sql);
         $handler->execute();
@@ -244,5 +248,16 @@ class User
             time() + 60 * 60 * 24 * 30,
             '/'
         );
+    }
+
+    public function getUserDataAsArray(): array
+    {
+        $userArray = [
+            'userid' => $this->idUser,
+            'username' => $this->userName,
+            'userlastname' => $this->userLastName,
+            'userbirthday' => date('d.m.Y', $this->userBirthday)
+        ];
+        return $userArray;
     }
 }

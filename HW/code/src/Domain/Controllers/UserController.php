@@ -14,7 +14,7 @@ class UserController extends AbstractController
         'actionHash' => ['admin'],
         'actionSave' => ['admin'],
         'actionEdit' => ['admin'],
-        'actionIndex' => ['admin'],
+        // 'actionIndex' => ['admin'],
         'actionLogout' => ['admin'],
         'actionUpdate' => ['admin'],
         'actionChange' => ['admin'],
@@ -106,8 +106,8 @@ class UserController extends AbstractController
         return $render->renderPageWithForm(
             'user-auth.twig',
             [
-                'title' => 'Форма логина',
-                'auth_error' => 'Вы пока не вошли в систему'
+                'title' => 'Форма логина'
+                // 'auth_error' => 'Вы пока не вошли в систему'
             ]
         );
     }
@@ -159,7 +159,7 @@ class UserController extends AbstractController
 
         if (!$result) {
             return $render->renderPage(
-                'auth-template.twig',
+                'user-auth.twig',
                 [
                     'title' => 'Форма логина',
                     'user_authorized' => false,
@@ -170,12 +170,12 @@ class UserController extends AbstractController
 
             // header('Location: /');
             return $render->renderPageWithForm(
-                'auth-template.twig',
-                [
-                    'title' => 'Форма логина',
-                    'user_authorized' => true,
-                    'userName' => $_SESSION['auth']['user_name']
-                ]
+                // 'page-index.twig',
+                // [
+                //     'title' => 'Форма логина',
+                //     'user_authorized' => true,
+                //     'userName' => $_SESSION['auth']['user_name']
+                // ]
             );
         }
     }
@@ -190,12 +190,12 @@ class UserController extends AbstractController
         $render = new Render();
 
         return $render->renderPage(
-            'auth-template.twig',
-            [
-                'title' => 'Форма логина',
-                'user_authorized' => false,
-                'auth_error' => 'Вы вышли из системы'
-            ]
+            // 'auth-template.twig',
+            // [
+            //     'title' => 'Форма логина',
+            //     'user_authorized' => false,
+            //     'auth_error' => 'Вы вышли из системы'
+            // ]
         );
     }
 
@@ -271,5 +271,25 @@ class UserController extends AbstractController
         } else {
             throw new \Exception("Пользователь не существует");
         }
+    }
+
+    public function actionIndexRefresh()
+    {
+        $limit = null;
+
+        if (isset($_POST['maxId']) && ($_POST['maxId'] > 0)) {
+            $limit = $_POST['maxId'];
+        }
+
+        $users = User::getAllUsersFromStorage($limit);
+        $usersData = [];
+
+        if (count($users) > 0) {
+            foreach ($users as $user) {
+                $userData[] = $user->getUserDataAsArray();
+            }
+        }
+
+        return json_encode($userData);
     }
 }

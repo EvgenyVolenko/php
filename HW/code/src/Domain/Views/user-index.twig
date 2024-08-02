@@ -1,24 +1,71 @@
 <a href="/user/edit">Добавить пользователя</a>
 
-<p>Список пользователей в хранилище</p>
+<h3>Список пользователей в хранилище</h3>
 
-<ul id="navigation">
-  {% for user in users %}
-    <li>
-      <a href="/user/show/?id={{ user.getUserId() }}">
-        id-{{ user.getUserId() }}
-        {{ user.getUserName() }}
-        {{ user.getUserLastName() }}. День рождения:{% if user.getUserBirthday() is empty %}
-          <b>не установлен</b>
-        {% else %}
-          {{ user.getUserBirthday()|date('d.m.Y') }}
-        {% endif %}
-      </a>
+<div class="table-responsive small">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="cole">ID</th>
+        <th scope="cole">Имя</th>
+        <th scope="cole">Фамилия</th>
+        <th scope="cole">Дата рождения</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <a href="/user/show/?id={{ user.getUserId() }}">
+            <td>{{ user.getUserId() }}</td>
+            <td>{{ user.getUserName() }}</td>
+            <td>{{ user.getUserLastName() }}</td>
+            <td>
+              {% if user.getUserBirthday() is empty %}
+                <b>не установлен</b>
+              {% else %}
+                {{ user.getUserBirthday()|date('d.m.Y') }}
+              {% endif %}
+            </td>
+          </a>
 
-      <div>
-        <a href="user/edit/?id={{ user.getUserId() }}" style="text-decoration: none; color:chocolate;">Изменить</a>
-        <a href="user/delete/?id={{ user.getUserId() }}" style="text-decoration: none; color:red;">Удалить</a>
-      </div>
-    </li>
-  {% endfor %}
-</ul>
+          <div>
+            <a href="user/edit/?id={{ user.getUserId() }}" style="text-decoration: none; color:chocolate;">Изменить</a>
+            <a href="user/delete/?id={{ user.getUserId() }}" style="text-decoration: none; color:red;">Удалить</a>
+          </div>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <script>
+    let maxId = jQuery('.table-responsive tbody tr:last-child td:first-child').html()
+    
+    setInterval(() => {
+      jQuery
+        .ajax({
+          method: 'POST',
+          url: 'user/indexRefresh/',
+          data: { maxId: maxId }
+        })
+        .done((data) => {
+          //data - JSON response
+          //0 => [userid, username, userlastname, userbirthday]
+    
+          let users = jQuery.parseJSON(data)
+          if (users.length > 0) {
+            for (const k in users) {
+              let row = '<tr>'
+              row += '<td>' + users[k].userid + '</td>'
+              maxId = users[k].userid
+              row += '<td>' + users[k].username + '</td>'
+              row += '<td>' + users[k].userlastname + '</td>'
+              row += '<td>' + users[k].userbirthday + '</td>'
+              row += '</tr>'
+    
+              jQuery('.content-template tbody').append(row)
+            }
+          }
+        })
+    }, 5000)
+  </script>
+</div>
