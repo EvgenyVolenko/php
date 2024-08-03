@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `application1` /*!40100 DEFAULT CHARACTER SET latin1 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `application1` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `application1`;
 -- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
@@ -85,7 +85,7 @@ CREATE TABLE `users` (
   `password_hash` varchar(150) DEFAULT NULL,
   `token` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +94,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin','Admin',NULL,'admin','$2y$10$k/uwYWGZguuEkcSgFL57/O/ZSAnF532ekb5b/W4OcABItLqypE2Zm','f8c65f1cec6b4b5a174f1f15811b0886'),(2,'Иван','Петров',794102400,'',NULL,NULL),(3,'Петр','Иванов',602380800,'',NULL,NULL),(10,'Иван','Кузин',957571200,'qwerty',NULL,NULL),(11,'Евгений','Воленко',294105600,'Vini',NULL,NULL),(12,'Ирина','Воленко',216604800,'Kim',NULL,NULL),(13,'Александр','Воленко',991699200,'QWERTY',NULL,NULL),(15,'Кузя','Васин',1071187200,'Кузя8186',NULL,NULL);
+INSERT INTO `users` VALUES (1,'Admin','Admin',NULL,'admin','$2y$10$k/uwYWGZguuEkcSgFL57/O/ZSAnF532ekb5b/W4OcABItLqypE2Zm','f8c65f1cec6b4b5a174f1f15811b0886'),(2,'Иван','Петров',794102400,'wertwert','$2y$10$hW3kqh2p9VjbLJ80Z21F.eZoLyE3ZXwBvfuyLIi6GxCQONVN5AtFi',NULL),(3,'Петр','Иванов',602380800,'Kim','$2y$10$m91cBB7NMRG3UiBhFKATf.Ik2mrxug9HCtwjgxPCf4o6LpVPBI8m6',NULL),(10,'Иван','Кузин',957571200,'qwerty','$2y$10$ubyIkF1YxKG2vf7bd89ic.2R/NbrCS9lchLMv9/4Rsi2yHHMwoNzm',NULL),(11,'Евгений','Воленко',294105600,'Vini','$2y$10$XIb8GUqnmWp3hSjgohQvJ.mEk2b.Tyw4XhDDFmUz420Kvinu518mS',NULL),(12,'Ирина','Воленко',216604800,'Kim','$2y$10$cYkI64c66M/DaiDd9642NekTj10gkJTRR6fPnAETqQsj2CKOn/3Z.',NULL),(13,'Александр','Воленко',991699200,'dstgfdsg','$2y$10$zBOHyfQklm05cJY8rAzFme211Cj20R1bcUIAeNzqWo.7P3Gs5KfcG',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -107,4 +107,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-29 20:24:49
+-- Dump completed on 2024-08-03 23:18:38
