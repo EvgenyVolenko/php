@@ -3,6 +3,7 @@
 namespace Geekbrains\Application1\Domain\Models;
 
 use Geekbrains\Application1\Application\Application;
+use Geekbrains\Application1\Application\Auth;
 
 class User
 {
@@ -12,6 +13,7 @@ class User
     private ?string $userLastName;
     private ?int $userBirthday;
     private ?string $userLogin;
+    private ?string $userPassword;
 
     // private static string $storageAddress = '/storage/birthdays.txt';
 
@@ -114,7 +116,8 @@ class User
             isset($_POST['name']) && !empty($_POST['name']) &&
             isset($_POST['lastname']) && !empty($_POST['lastname']) &&
             isset($_POST['birthday']) && !empty($_POST['birthday']) &&
-            isset($_POST['login']) && !empty($_POST['login'])
+            isset($_POST['login']) && !empty($_POST['login']) &&
+            isset($_POST['password']) && !empty($_POST['password'])
         )) {
             $result = false;
         }
@@ -136,14 +139,15 @@ class User
 
     public function saveToStorage()
     {
-        $sql = "INSERT INTO users(user_name, user_lastname, user_birthday_timestamp, user_login) VALUES (:user_name, :user_lastname, :user_birthday, :user_login)";
+        $sql = "INSERT INTO users(user_name, user_lastname, user_birthday_timestamp, user_login, password_hash) VALUES (:user_name, :user_lastname, :user_birthday, :user_login, :user_password)";
 
         $handler = Application::$storage->get()->prepare($sql);
         $handler->execute([
             'user_name' => $this->userName,
             'user_lastname' => $this->userLastName,
             'user_birthday' => $this->userBirthday,
-            'user_login' => $this->userLogin
+            'user_login' => $this->userLogin,
+            'user_password' => $this->userPassword
         ]);
     }
 
@@ -192,18 +196,18 @@ class User
         $this->userName = htmlspecialchars($_POST['name']);
         $this->userLastName = htmlspecialchars($_POST['lastname']);
         $this->setBirthdayFromString($_POST['birthday']);
-        $this->userLogin = $this->userName . (string)rand(1000, 9999);
+        $this->userLogin = htmlspecialchars($_POST['login']);
+        $this->userPassword = Auth::getPasswordHash($_POST['password']);
     }
 
-
-    public static function getUserRolesById(): array
+    public static function getUserRolesById(int $idUser): array
     {
         $roles = [];
         $rolesSql = "SELECT * FROM user_roles WHERE id_user = :id";
 
         $handler = Application::$storage->get()->prepare($rolesSql);
 
-        $handler->execute(['id' => $_SESSION['auth']['id_user']]);
+        $handler->execute(['id' => $idUser]);
         $result = $handler->fetchAll();
 
         if (!empty($result)) {

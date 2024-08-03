@@ -7,7 +7,7 @@ class TimeController
     public function actionIndex(): string
     {
         $result = [
-            'time' => date('d-m-Y H:i:s')
+            'time' => date('H:i')
         ];
 
         return json_encode($result);

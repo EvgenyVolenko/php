@@ -246,23 +246,25 @@ class UserController extends AbstractController
     //     );
     // }
 
+
     public function actionDelete(): string
     {
-
-        if (User::exists($_GET['id'])) {
+        if (User::exists($_GET['id']) && !in_array('admin', User::getUserRolesById($_GET['id']))) {
             User::deleteFromStorage($_GET['id']);
 
-            // header('Location: /user');
-            // die();
+            /**header('Location: /user');
+            die();
 
             $render = new Render();
 
             return $render->renderPageWithForm(
                 'user-removed.twig',
                 []
-            );
+            );*/
+            return json_encode(['answer' => "Пользователь с ID={$_GET['id']} уудален"]);
         } else {
-            throw new \Exception("Пользователь не существует");
+            return json_encode("Пользователь не существует или вы пытаетесь удалить администратора");
+            // throw new \Exception("Пользователь не существует или вы пытаетесь удалить администратора");
         }
     }
 

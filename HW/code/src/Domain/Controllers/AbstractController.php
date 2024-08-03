@@ -14,7 +14,7 @@ class AbstractController
         $roles = [];
 
         if (isset($_SESSION['auth']['id_user'])) {
-            $roles = User::getUserRolesById();
+            $roles = User::getUserRolesById($_SESSION['auth']['id_user']);
         }
 
         $roles[] = 'user';

@@ -29,15 +29,16 @@
 //         })
 // }, 5000);
 
+async function getTime() {
+    const response = await fetch('/time/index');
+    const answer = await response.json();
+    document.querySelector('.serverTime').textContent = answer.time;
+}
+getTime();
+
 setInterval(() => {
-    (
-        async () => {
-            const response = await fetch('/time/index');
-            const answer = await response.json();
-            document.querySelector('.serverTime').textContent = answer.time;
-        }
-    )();
-}, 1000);
+    getTime();
+}, 30000);
 
 // setInterval(() => {
 //   jQuery.ajax({

@@ -1,6 +1,6 @@
 <h3>{{ title }}</h3>
 
-<!--         <form action="/user/save/" method="post">
+<!--           <form action="/user/save/" method="post">
   <input id="csrf_token" type="hidden" name="csrf_token" value="{{ csrf_token }}" />
   <p>
     <label for="user-name">Имя:</label>
@@ -17,7 +17,7 @@
   <p>
     <input type="submit" value="Сохранить" />
   </p>
-</form>         -->
+</form>           -->
 
 <form action="{{ action }}/?id={{ user_data.id_user }}" method="post">
   <input id="csrf_token" type="hidden" name="csrf_token" value="{{ csrf_token }}" />
@@ -26,6 +26,10 @@
   <p>
     <label for="user-name">Логин:</label>
     <input id="user-login" type="text" name="login" value="{{ user_data.user_login }}" />
+  </p>
+  <p>
+    <label for="user-password">Пароль:</label>
+    <input id="user-password" type="text" name="password" />
   </p>
   <p>
     <label for="user-name">Имя:</label>
