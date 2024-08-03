@@ -154,7 +154,6 @@ class UserController extends AbstractController
                 isset($_POST['user-remember']) && $_POST['user-remember'] == 'remember'
             ) {
                 $token = Application::$auth->generateToken($_SESSION['auth']['id_user']);
-
                 User::setToken($_SESSION['auth']['id_user'], $token);
             }
         }
@@ -280,10 +279,10 @@ class UserController extends AbstractController
 
         if (count($users) > 0) {
             foreach ($users as $user) {
-                $userData[] = $user->getUserDataAsArray();
+                $usersData[] = $user->getUserDataAsArray();
             }
         }
 
-        return json_encode($usersData);
+        return json_encode($usersData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT); // параметры только на время разработки и отладки
     }
 }

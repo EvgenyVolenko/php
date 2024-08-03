@@ -34,9 +34,8 @@ class Auth
     public function proceedAuth(string $login, string $password): bool
     {
 
-        if (!$login) {
-            header('Location: /'); //!!!!!!!!!!!!!!!!!!!!!!!!!
-            die();
+        if ($password == '' || $login == '') {
+            return false;
         }
 
         $sql = "SELECT id_user, user_name, user_lastname, password_hash FROM users WHERE user_login = :user_login";

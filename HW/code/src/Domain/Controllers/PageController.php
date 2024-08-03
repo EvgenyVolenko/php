@@ -15,4 +15,9 @@ class PageController
             'title' => 'Главная страница'
         ]);
     }
+
+    public function actionTime(): string
+    {
+        return json_encode(date('H:i:s'));
+    }
 }

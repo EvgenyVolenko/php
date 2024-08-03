@@ -113,7 +113,8 @@ class User
         if (!(
             isset($_POST['name']) && !empty($_POST['name']) &&
             isset($_POST['lastname']) && !empty($_POST['lastname']) &&
-            isset($_POST['birthday']) && !empty($_POST['birthday'])
+            isset($_POST['birthday']) && !empty($_POST['birthday']) &&
+            isset($_POST['login']) && !empty($_POST['login'])
         )) {
             $result = false;
         }
