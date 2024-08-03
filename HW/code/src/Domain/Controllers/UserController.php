@@ -206,6 +206,7 @@ class UserController extends AbstractController
                 $tempUser->setLastName($_POST['lastname']);
                 $tempUser->setBirthdayFromString($_POST['birthday']);
                 $tempUser->setUserLogin($_POST['login']);
+                $tempUser->setUserPassword(Auth::getPasswordHash($_POST['password']));
                 $tempUser->updateUser($tempUser);
             }
         } else {

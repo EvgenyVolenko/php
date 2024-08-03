@@ -17,13 +17,14 @@ class User
 
     // private static string $storageAddress = '/storage/birthdays.txt';
 
-    public function __construct(string $name = null, string $lastName = null, int $birthday = null, int $id_user = null, string $login = null)
+    public function __construct(string $name = null, string $lastName = null, int $birthday = null, int $id_user = null, string $login = null, string $password = null)
     {
         $this->userName = $name;
         $this->userLastName = $lastName;
         $this->userBirthday = $birthday;
         $this->idUser = $id_user;
         $this->userLogin = $login;
+        $this->userPassword = $password;
     }
     public function setUserId(int $id_user): void
     {
@@ -65,6 +66,11 @@ class User
         $this->userLogin = $login;
     }
 
+    public function setUserPassword(string $password): void
+    {
+        $this->userPassword = $password;
+    }
+
     public function setBirthdayFromString(string $birthdayString): void
     {
         $this->userBirthday = strtotime($birthdayString);
@@ -101,7 +107,7 @@ class User
         $users = [];
 
         foreach ($result as $item) {
-            $user = new User($item['user_name'], $item['user_lastname'], $item['user_birthday_timestamp'], $item['id_user']);
+            $user = new User($item['user_name'], $item['user_lastname'], $item['user_birthday_timestamp'], $item['id_user'], $item['user_login'], $item['password_hash']);
             $users[] = $user;
         }
 
@@ -171,7 +177,7 @@ class User
 
     public function updateUser(): void
     {
-        $sql = "UPDATE users SET user_name = :user_name, user_lastname = :user_lastname, user_birthday_timestamp = :user_birthday, user_login = :user_login WHERE id_user = :id_user";
+        $sql = "UPDATE users SET user_name = :user_name, user_lastname = :user_lastname, user_birthday_timestamp = :user_birthday, user_login = :user_login, password_hash =:user_password  WHERE id_user = :id_user";
 
         $handler = Application::$storage->get()->prepare($sql);
         $handler->execute([
@@ -179,7 +185,8 @@ class User
             'user_lastname' => $this->userLastName,
             'user_birthday' => $this->userBirthday,
             'id_user' => $this->idUser,
-            'user_login' => $this->userLogin
+            'user_login' => $this->userLogin,
+            'user_password' => $this->userPassword
         ]);
     }
 
