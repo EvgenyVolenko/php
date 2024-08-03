@@ -398,6 +398,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 #My project
-.env
 db/
 vendor/
